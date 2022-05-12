@@ -1,0 +1,331 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>one</title>
+    <meta name="description" content="one">
+    <meta name="author" content="one">
+    <!-- Use CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <style>
+        body {
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
+            color: rgb(209, 205, 199);
+            background-color: rgb(24, 26, 27);
+        }
+        
+        span {
+            cursor: pointer;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none !important;
+        }
+        
+        .right {
+            text-align: right;
+        }
+        
+        .link {
+            cursor: pointer;
+        }
+        
+        .link:hover {
+            color: ghostwhite;
+        }
+        
+        td {
+            font-weight: 100;
+            letter-spacing: 1px;
+            color: #8c8c8c;
+            font-size: .8em;
+        }
+        
+        th {
+            border: none;
+            letter-spacing: 1px;
+            font-weight: 100;
+            font-size: .8em;
+        }
+        
+        .card-body {
+            padding-left: .5rem;
+            padding-top: 0rem;
+        }
+        
+        #id:hover {
+            color: rgb(255, 90, 90);
+        }
+        
+        #bcount:hover {
+            color: ghostwhite;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <span onclick="bshow()">Blocks</span>&nbsp;
+                <span onclick="tshow()">Txs</span>&nbsp;
+                <span onclick="ashow()">Accs</span>&nbsp;
+                <span onclick="tokshow()">Toks</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+
+            <div id="block11" class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-3 col-md-2 col-lg-2">
+                                <span onclick="bshow()">Blocks</span>
+                                <span style="color:grey;font-size:.8em;" id="bcount">0</span>
+                            </div>
+                            <div class="col-6 right">
+                                <span style="color:rgb(46, 67, 176); font-size: .9em; cursor: pointer;" onclick="calk()">All</span>
+                            </div>
+                            <div id="bhash" class="col-12"></div>
+                            <span id="calshow">
+                            <div id="calyears" class="col-12 right"></div>
+                            <div id="calmonths" class="col-12 right"></div>
+                            <div id="caldays" class="col-12 right"></div>
+                            <div style="overflow:auto;white-space: nowrap" id="calpages" class="col-12 right"></div>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height:500px;overflow:auto;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="color:grey;" scope="col">Shard</th>
+                                    <th style="color:grey;" scope="col">Index</th>
+                                    <th style="color:grey;" scope="col">Hash</th>
+                                    <th style="color:grey;" scope="col">Txs</th>
+                                    <th style="color:grey;" scope="col">Staking</th>
+                                    <th style="color:grey;" scope="col">Signers</th>
+                                    <th style="color:grey;" scope="col">Size</th>
+                                    <th style="color:grey;" scope="col">Nonce</th>
+                                    <th style="color:grey;" scope="col">Epoch</th>
+                                    <th id="ageborn" style="color:grey;" scope="col">Age</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blist"></tbody>
+                            <tbody id="caltbl"></tbody>
+                        </table>
+                        <div id="blook"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tx11" class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-12">
+                                <span>Txs</span>
+                                <span style="color:grey;font-size:.8em;" id="tcount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" style="height:500px;overflow:auto;">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="color:grey;" scope="col">Shard</th>
+                                    <th style="color:grey;" scope="col">Hash</th>
+                                    <th style="color:grey;" scope="col">From</th>
+                                    <th style="color:grey;" scope="col">To</th>
+                                    <th style="color:grey;" scope="col">One</th>
+                                    <th style="color:grey;" scope="col">Age</th>
+                                    <th style="color:grey;" scope="col">Logs</th>
+                                    <th style="color:grey;" scope="col">Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tlist">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script>
+        var first = false;
+        var openhead = "block1";
+        var hclick = function(id) {
+            if (openhead != id) {
+                document.getElementById(openhead + '1').hidden = true;
+                document.getElementById(id + '1').hidden = false;
+                openhead = id;
+            }
+        };
+
+        var ws;
+
+        var bshow = () => {
+            document.getElementById("calshow").hidden = true;
+            document.getElementById("blook").hidden = true;
+            document.getElementById("bhash").hidden = true;
+            document.getElementById("blist").hidden = false;
+            document.getElementById("ageborn").innerText = 'Age';
+        };
+
+        var calk = function() {
+            if (!first) {
+                document.getElementById("blook").hidden = true;
+                document.getElementById("calshow").hidden = false;
+                document.getElementById("bhash").hidden = true;
+                calc();
+                fase = true;
+                return
+            };
+            document.getElementById("blook").hidden = true;
+            document.getElementById("bhash").hidden = true;
+            document.getElementById("blist").hidden = true;
+            document.getElementById("calshow").hidden = false;
+            document.getElementById("ageborn").innerText = 'Born';
+            calc();
+        };
+
+        document.getElementById("calshow").hidden = true;
+        document.getElementById("caltbl").hidden = true;
+        document.getElementById("blook").hidden = true;
+
+        var calc = function() {
+            document.getElementById("calyears").innerHTML = '&nbsp;';
+            ws.send('cal');
+        };
+        var yearc = function(id) {
+            document.getElementById("calmonths").innerHTML = '&nbsp;';
+            ws.send('cal-' + id);
+        };
+        var monthc = function(id) {
+            document.getElementById("caldays").innerHTML = '&nbsp;';
+            ws.send('cal-' + id);
+        };
+        var dayc = function(id) {
+            document.getElementById("calpages").innerHTML = '&nbsp;';
+            ws.send('cal-' + id);
+        };
+        var pagec = function(id) {
+            document.getElementById("caltbl").innerHTML = '&nbsp;';
+            document.getElementById("blist").hidden = true;
+            document.getElementById("caltbl").hidden = false;
+            ws.send('cal-' + id);
+        };
+
+        ws = new WebSocket("ws://localhost:1234/ws/");
+        ws.onopen = (evt) => {
+            console.log("open");
+        };
+        ws.onclose = (evt) => {
+            console.log(evt.data);
+        };
+        ws.onmessage = (evt) => {
+
+            var aa = JSON.parse(evt.data);
+
+            if (aa.switch == 9) {
+                document.getElementById("caltbl").innerHTML = aa.cal;
+            }
+
+            if (aa.switch == 8) {
+                document.getElementById("calpages").innerHTML = aa.cal;
+            }
+
+            if (aa.switch == 7) {
+                document.getElementById("caldays").innerHTML = aa.cal;
+            }
+
+            if (aa.switch == 6) {
+                document.getElementById("calmonths").innerHTML = aa.cal;
+            }
+
+            if (aa.switch == 5) {
+                document.getElementById("calyears").innerHTML = aa.cal;
+            }
+
+            if (aa.switch == 1) {
+                document.getElementById("bcount").innerText = aa.bcount;
+                document.getElementById("tcount").innerText = aa.tcount;
+                document.getElementById("blist").innerHTML = aa.blocks;
+                document.getElementById("tlist").innerHTML = aa.txs;
+            }
+
+            if (aa.switch == 0) {
+                var qq = document.getElementById("blistin");
+                var tr = document.createElement("tr");
+                tr.innerHTML = aa.blocks;
+                document.getElementById("blist").prepend(tr);
+
+                if (aa.txs.length > 0) {
+                    aa.txs.forEach((e) => {
+
+                        var qq = document.getElementById("tlistin");
+                        var rt = document.createElement("tr");
+                        rt.innerHTML = e;
+                        document.getElementById("tlist").prepend(rt);
+                    });
+                }
+            }
+
+
+        };
+        ws.onerror = (evt) => {
+            console.log(evt.data);
+        };
+
+
+        var bhash = (id) => {
+            document.getElementById("blist").hidden = true;
+            document.getElementById("caltbl").hidden = true;
+            document.getElementById("bhash").innerText = id;
+            document.getElementById("blook").hidden = false;
+            ws.send(id);
+        };
+
+        setInterval(() => {
+            const els = document.querySelectorAll('.timing');
+            Array.from(els).forEach((e) => {
+                var a = e.innerText;
+                var b = parseInt(a);
+                var c = b + 1;
+                e.innerText = c;
+            });
+        }, 1000);
+    </script>
+</body>
+
+</html>
